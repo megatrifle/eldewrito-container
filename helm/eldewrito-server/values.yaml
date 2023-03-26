@@ -37,7 +37,7 @@ modSync:
   syncRepo: https://github.com/example/example.com
 
   image:
-    repository: k8s.gcr.io/git-sync
+    repository: k8s.gcr.io/git-sync/git-sync
     tag: v3.6.5
     pullPolicy: IfNotPresent
   
