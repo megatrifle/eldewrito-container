@@ -1,0 +1,6 @@
+apiVersion: v2
+name: eldewrito
+description: A Helm chart for Eldewrito
+type: application
+version: 1.0.0
+appVersion: latest
