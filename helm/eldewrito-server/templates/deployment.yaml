@@ -78,7 +78,9 @@ spec:
             - name: GIT_SYNC_REPO
               value: {{ .Values.modSync.syncRepo }}
             - name: GIT_SYNC_DEST
-              value: git-sync
+              value: current
+            - name: GIT_SYNC_ROOT
+              value: /tmp/git
             {{- with .Values.modSync.env }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
