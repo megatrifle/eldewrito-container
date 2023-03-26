@@ -23,6 +23,34 @@ spec:
       serviceAccountName: {{ include "eldewrito.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: mod-sync
+          securityContext:
+            {{- toYaml .Values.modSync.securityContext | nindent 12 }}
+          image: "{{ .Values.modSync.image.repository }}:{{ .Values.modSync.image.tag }}"
+          imagePullPolicy: {{ .Values.modSync.image.pullPolicy }}
+          resources:
+            {{- toYaml .Values.modSync.resources | nindent 12 }}
+          volumeMounts:
+            - name: dewrito-mods
+              mountPath: /opt/eldewrito/mods
+            {{- if .Values.modSync.extraVolumeMounts -}}
+            {{ .Values.modSync.extraVolumeMounts | toYaml | nindent 12 }}
+            {{- end }}
+          env:
+            - name: GIT_SYNC_REPO
+              value: {{ .Values.modSync.syncRepo }}
+            - name: GIT_SYNC_BRANCH
+              value: main
+            - name: GIT_SYNC_DEST
+              value: current
+            - name: GIT_SYNC_ONE_TIME
+              value: "true"
+            - name: GIT_SYNC_ROOT
+              value: /opt/eldewrito/mods
+            {{- with .Values.modSync.env }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
       containers:
         - name: eldewrito-server
           securityContext:
@@ -62,33 +90,6 @@ spec:
             - containerPort: 11777
               protocol: TCP
               hostPort: 11777
-        - name: mod-sync
-          securityContext:
-            {{- toYaml .Values.modSync.securityContext | nindent 12 }}
-          image: "{{ .Values.modSync.image.repository }}:{{ .Values.modSync.image.tag }}"
-          imagePullPolicy: {{ .Values.modSync.image.pullPolicy }}
-          resources:
-            {{- toYaml .Values.modSync.resources | nindent 12 }}
-          volumeMounts:
-            - name: dewrito-mods
-              mountPath: /opt/eldewrito/mods
-            {{- if .Values.modSync.extraVolumeMounts -}}
-            {{ .Values.modSync.extraVolumeMounts | toYaml | nindent 12 }}
-            {{- end }}
-          env:
-            - name: GIT_SYNC_REPO
-              value: {{ .Values.modSync.syncRepo }}
-            - name: GIT_SYNC_BRANCH
-              value: main
-            - name: GIT_SYNC_DEST
-              value: current
-            - name: GIT_SYNC_ONE_TIME
-              value: "true"
-            - name: GIT_SYNC_ROOT
-              value: /opt/eldewrito/mods
-            {{- with .Values.modSync.env }}
-            {{- toYaml . | nindent 12 }}
-            {{- end }}
       volumes:
         - name: dewrito-prefs
           configMap:
