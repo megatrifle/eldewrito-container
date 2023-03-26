@@ -45,6 +45,7 @@ spec:
               readOnly: true
             - name: dewrito-mods
               mountPath: /opt/eldewrito/mods
+              subPath: current
               readOnly: true
             - name: logs
               mountPath: /var/log/eldewrito
