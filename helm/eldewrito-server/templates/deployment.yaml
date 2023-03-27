@@ -1,0 +1,120 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "eldewrito.fullname" . }}
+  labels:
+    {{- include "eldewrito.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "eldewrito.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "eldewrito.selectorLabels" . | nindent 8 }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "eldewrito.serviceAccountName" . }}
+      automountServiceAccountToken: false
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: git-sync-mods-folder
+          securityContext:
+            {{- toYaml .Values.gitSync.securityContext | nindent 12 }}
+          image: "{{ .Values.gitSync.image.repository }}:{{ .Values.gitSync.image.tag }}"
+          imagePullPolicy: {{ .Values.gitSync.image.pullPolicy }}
+          resources:
+            {{- toYaml .Values.gitSync.resources | nindent 12 }}
+          volumeMounts:
+            - name: dewrito-mods
+              mountPath: /opt/eldewrito/mods
+            {{- if .Values.gitSync.extraVolumeMounts -}}
+            {{ .Values.gitSync.extraVolumeMounts | toYaml | nindent 12 }}
+            {{- end }}
+          env:
+            - name: GIT_SYNC_REPO
+              value: {{ .Values.gitSync.repo }}
+            - name: GIT_SYNC_BRANCH
+              value: {{ .Values.gitSync.branch }}
+            - name: GIT_SYNC_DEST
+              value: current
+            - name: GIT_SYNC_ONE_TIME
+              value: "true"
+            - name: GIT_SYNC_ROOT
+              value: /opt/eldewrito/mods
+            {{- with .Values.gitSync.env }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+      containers:
+        - name: eldewrito-server
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: RUN_AS_USER
+              value: "true"
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: dewrito-prefs
+              mountPath: /opt/eldewrito/dewrito_prefs.cfg
+              subPath: dewrito_prefs.cfg
+              readOnly: true
+            - name: dewrito-mods
+              mountPath: /opt/eldewrito/mods
+              subPath: current
+              readOnly: true
+            - name: logs
+              mountPath: /var/log/eldewrito
+          ports:
+            - containerPort: 11774
+              protocol: UDP
+              hostPort: 11774
+            - containerPort: 11775
+              hostPort: 11775
+              protocol: TCP
+            - containerPort: 11776
+              protocol: TCP
+              hostPort: 11776
+            - containerPort: 11777
+              protocol: TCP
+              hostPort: 11777
+      volumes:
+        - name: dewrito-prefs
+          configMap:
+            defaultMode: 420
+            name: {{ template "eldewrito.fullname" . }}-dewrito-prefs
+            items:
+              - key: dewrito_prefs.cfg
+                path: dewrito_prefs.cfg
+        - name: dewrito-mods
+          emptyDir:
+            medium: "Memory"
+        - name: logs
+          hostPath:
+            path: /srv/eldewrito/logs
+            type: Directory
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

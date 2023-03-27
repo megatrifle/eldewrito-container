@@ -1,0 +1,42 @@
+#!/bin/sh
+
+NC='\033[0m'
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+YELLOW='\033[0;33m'
+
+echo "Initializing ElDewrito ${ELDEWRITO_VERSION}"
+
+# Search for eldorado.exe in game directory
+if [ ! -f "eldorado.exe" ]; then
+    echo "${RED}Could not find eldorado.exe. Did you mount the game directory to ${ELDEWRITO_DIR}?${NC}"
+
+    sleep 2
+    exit 1
+fi
+
+# Xvfb needs cleaning because it doesn't exit cleanly
+echo "Cleaning up"
+rm /tmp/.X1-lock
+
+echo "Starting virtual frame buffer"
+Xvfb :1 -screen 0 320x240x24 &
+
+echo "${GREEN}Starting dedicated server${NC}"
+
+# DLL overrides for Wine are required to prevent issues with master server announcement
+export WINEDLLOVERRIDES="winhttp,rasapi32=n"
+
+if [ ! -z "${WINE_DEBUG}" ]; then
+    echo "Setting wine to verbose output"
+    export WINEDEBUG=warn+all
+fi
+
+wine eldorado.exe -launcher -dedicated -window -height 200 -width 200 -minimized
+
+if [ -z "${WAIT_ON_EXIT}" ]; then
+    echo "${RED}Server terminated, exiting${NC}"
+else
+    echo "${RED}Server terminated, waiting${NC}"
+    sleep infinity
+fi

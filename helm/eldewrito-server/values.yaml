@@ -1,0 +1,67 @@
+replicaCount: 1
+
+image:
+  repository: localhost/eldewrito-server
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  name:
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
+  fsGroupChangePolicy: "OnRootMismatch"
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    add:
+      - SYS_PTRACE
+
+resources:
+  limits:
+    cpu: 1
+    memory: 8Gi
+  requests:
+    cpu: 1
+    memory: 3Gi
+
+gitSync:
+  repo: https://github.com/example/example.com
+  branch: main
+
+  image:
+    repository: k8s.gcr.io/git-sync/git-sync
+    tag: v3.6.5
+    pullPolicy: IfNotPresent
+  
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+      - ALL
+
+  env: []
+
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+  extraVolumeMounts: []
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
