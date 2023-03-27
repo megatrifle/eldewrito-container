@@ -100,7 +100,8 @@ spec:
               - key: dewrito_prefs.cfg
                 path: dewrito_prefs.cfg
         - name: dewrito-mods
-          emptyDir: {}
+          emptyDir:
+            medium: "Memory"
         - name: logs
           hostPath:
             path: /srv/eldewrito/logs
