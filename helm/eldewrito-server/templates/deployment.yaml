@@ -25,31 +25,31 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
-        - name: mod-sync
+        - name: git-sync-mods-folder
           securityContext:
-            {{- toYaml .Values.modSync.securityContext | nindent 12 }}
-          image: "{{ .Values.modSync.image.repository }}:{{ .Values.modSync.image.tag }}"
-          imagePullPolicy: {{ .Values.modSync.image.pullPolicy }}
+            {{- toYaml .Values.gitSync.securityContext | nindent 12 }}
+          image: "{{ .Values.gitSync.image.repository }}:{{ .Values.gitSync.image.tag }}"
+          imagePullPolicy: {{ .Values.gitSync.image.pullPolicy }}
           resources:
-            {{- toYaml .Values.modSync.resources | nindent 12 }}
+            {{- toYaml .Values.gitSync.resources | nindent 12 }}
           volumeMounts:
             - name: dewrito-mods
               mountPath: /opt/eldewrito/mods
-            {{- if .Values.modSync.extraVolumeMounts -}}
-            {{ .Values.modSync.extraVolumeMounts | toYaml | nindent 12 }}
+            {{- if .Values.gitSync.extraVolumeMounts -}}
+            {{ .Values.gitSync.extraVolumeMounts | toYaml | nindent 12 }}
             {{- end }}
           env:
             - name: GIT_SYNC_REPO
-              value: {{ .Values.modSync.syncRepo }}
+              value: {{ .Values.gitSync.repo }}
             - name: GIT_SYNC_BRANCH
-              value: main
+              value: {{ .Values.gitSync.branch }}
             - name: GIT_SYNC_DEST
               value: current
             - name: GIT_SYNC_ONE_TIME
               value: "true"
             - name: GIT_SYNC_ROOT
               value: /opt/eldewrito/mods
-            {{- with .Values.modSync.env }}
+            {{- with .Values.gitSync.env }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
       containers:

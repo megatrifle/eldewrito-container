@@ -33,8 +33,9 @@ resources:
     cpu: 1
     memory: 3Gi
 
-modSync:
-  syncRepo: https://github.com/example/example.com
+gitSync:
+  repo: https://github.com/example/example.com
+  branch: main
 
   image:
     repository: k8s.gcr.io/git-sync/git-sync
