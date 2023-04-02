@@ -19,13 +19,16 @@ RUN wget -nv -O- https://dl.winehq.org/wine-builds/winehq.key | APT_KEY_DONT_WAR
     && DEBIAN_FRONTEND="noninteractive" apt-get install -y --install-recommends winehq-${WINE_BRANCH} \
     && rm -rf /var/lib/apt/lists/*
 
+# Create eldewrito user
 RUN mkdir /etc/eldewrito /var/log/eldewrito /opt/eldewrito && \
     chown -R 1000:1000 /opt/eldewrito && \
     groupadd --gid 1000 eldewrito && \
     useradd --uid 1000 --gid 1000 --home-dir /opt/eldewrito eldewrito
 
+# Set eldewrito directory
 WORKDIR /opt/eldewrito
 
+# Switch to user
 USER 1000
 
 # Download winetricks from source
@@ -41,21 +44,24 @@ RUN Xvfb :1 -screen 0 320x240x24 & \
     rm winetricks && \
     rm -rf .cache/
 
+# Switch to root
 USER 0
 
 # Cleanup unneeded packages
 RUN apt-get remove -y wget software-properties-common apt-transport-https cabextract && \
     rm -rf /var/lib/apt/lists/*
 
+# Switch to user
 USER 1000
 
+# Copy in eldewrito game files
 COPY --chown=1000:1000 eldewrito-game /opt/eldewrito
 
 # Add the 'eldewrito-server' script
 ADD eldewrito-server /usr/local/bin/eldewrito-server
 
-# Set start command to execute the start script
-CMD ["eldewrito-server"]
+# Set entrypoint to 'eldewrito-server' script
+ENTRYPOINT ["/usr/local/bin/eldewrito-server"]
 
 # Expose necessary ports
 EXPOSE 11774/udp 11775/tcp 11776/tcp 11777/tcp
