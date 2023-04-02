@@ -63,7 +63,7 @@ data:
     Player.Name "GNUdorito"
     Player.ServiceTag "GNU"
     Player.Gender "male"
-    Server.Name "[GNU] Custom Games - Infection - Slayer"
+    Server.Name "[GNU] Custom Games Archive - Slayer - Infection"
     Server.Message "Sorry, some playlist items will be broken. Please send PRs and issues reports to https://github.com/megatrifle/eldewrito-maps until we can get through all the maps and variants. Come help contribute to a community eldewrito map archive!"
     Server.Password ""
     Server.Countdown "5"
