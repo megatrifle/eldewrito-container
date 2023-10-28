@@ -1,5 +1,5 @@
 # Pull ubuntu image
-FROM docker.io/ubuntu:20.04
+FROM docker.io/ubuntu:23.04
 
 # Set environment variables
 ENV ELDEWRITO_VERSION=0.6.1 \
