@@ -21,9 +21,8 @@ RUN wget -nv -O- https://dl.winehq.org/wine-builds/winehq.key | APT_KEY_DONT_WAR
 
 # Create eldewrito user
 RUN mkdir /etc/eldewrito /var/log/eldewrito /opt/eldewrito && \
-    chown -R 1000:1000 /opt/eldewrito && \
-    groupadd --gid 1000 eldewrito && \
-    useradd --uid 1000 --gid 1000 --home-dir /opt/eldewrito eldewrito
+    usermod -d /opt/eldewrito ubuntu && \
+    chown -R 1000:1000 /opt/eldewrito
 
 # Set eldewrito directory
 WORKDIR /opt/eldewrito
