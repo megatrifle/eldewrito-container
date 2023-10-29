@@ -25,13 +25,13 @@ securityContext:
     add:
       - SYS_PTRACE
 
-resources:
-  limits:
-    cpu: 1
-    memory: 4Gi
-  requests:
-    cpu: 1
-    memory: 4Gi
+# resources:
+#   limits:
+#     cpu: 1
+#     memory: 4Gi
+#   requests:
+#     cpu: 1
+#     memory: 4Gi
 
 gitSync:
   repo: https://github.com/megatrifle/eldewrito-maps
