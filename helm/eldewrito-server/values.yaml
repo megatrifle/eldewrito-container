@@ -28,10 +28,10 @@ securityContext:
 resources:
   limits:
     cpu: 1
-    memory: 8Gi
+    memory: 4Gi
   requests:
     cpu: 1
-    memory: 3Gi
+    memory: 4Gi
 
 gitSync:
   repo: https://github.com/megatrifle/eldewrito-maps
