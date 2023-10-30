@@ -1,3 +1,9 @@
+config:
+  serverName: "[GNU] Custom Games Archive"
+  serverMessage: "Sorry, some playlist items will be broken. Please send PRs and issues reports to https://github.com/megatrifle/eldewrito-maps until we can get through all the maps and variants. Come help contribute to a community eldewrito map archive!"
+  serverPassword: ""
+  serverPlayerName: "GNUdorito"
+
 replicaCount: 1
 
 image:
