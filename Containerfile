@@ -3,8 +3,22 @@ FROM docker.io/ubuntu:23.04
 
 # Set environment variables
 ENV ELDEWRITO_VERSION=0.6.1 \
-    DISPLAY=:1 \
+    DISPLAY=:0 \
     DEBIAN_FRONTEND=noninteractive
+
+# install x11 i386 packages
+RUN dpkg --add-architecture i386 \
+ && apt-get update -qq \
+ && apt-get install -qqy --no-install-recommends \
+      dbus-x11:i386 \
+      gnome-icon-theme:i386 \
+      libcanberra-gtk-module:i386 \
+      libcanberra-gtk3-module:i386 \
+      libgl1-mesa-dri:i386 \
+      libgl1-mesa-glx:i386 \
+      libnotify-bin:i386 \
+      pulseaudio:i386 \
+ && rm -rf /var/lib/apt/lists/*
 
 # Install dependency packages
 RUN apt-get update && \
@@ -36,7 +50,7 @@ RUN wget https://raw.githubusercontent.com/Winetricks/winetricks/master/src/wine
 
 # Configure wine prefix
 # WINEDLLOVERRIDES is required so wine doesn't ask any questions during setup
-RUN Xvfb :1 -screen 0 320x240x24 & \
+RUN Xvfb :0 -screen 0 320x240x24 & \
     WINEDLLOVERRIDES="mscoree,mshtml=" wineboot -u && \
     wineserver -w && \
     ./winetricks -q vcrun2012 winhttp && \

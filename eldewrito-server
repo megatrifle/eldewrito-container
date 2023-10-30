@@ -20,7 +20,8 @@ echo "Cleaning up"
 rm /tmp/.X1-lock
 
 echo "Starting virtual frame buffer"
-Xvfb :1 -screen 0 320x240x24 &
+Xvfb :0 -screen 0 320x240x24 &
+sleep 10
 
 echo "${GREEN}Starting dedicated server${NC}"
 
