@@ -6,8 +6,6 @@ metadata:
     {{- include "eldewrito.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
-  strategy:
-    type: Recreate
   selector:
     matchLabels:
       {{- include "eldewrito.selectorLabels" . | nindent 6 }}
@@ -76,7 +74,7 @@ spec:
               mountPath: /opt/eldewrito/mods
               subPath: current
               readOnly: true
-            - name: logs
+            - name: dewrito-logs
               mountPath: /var/log/eldewrito
           ports:
             - containerPort: 11774
@@ -91,6 +89,13 @@ spec:
             - containerPort: 11777
               protocol: TCP
               hostPort: 11777
+        - name: log-reader
+          image: busybox
+          command: ["/bin/sh"]
+          args: ["-c", "tail -f /var/log/eldewrito/chat.log /var/log/eldewrito/dorito.log"] # Run a shell script that tails the log file
+          volumeMounts:
+            - name: dewrito-logs
+              mountPath: /var/log/eldewrito
       volumes:
         - name: dewrito-prefs
           configMap:
@@ -102,10 +107,9 @@ spec:
         - name: dewrito-mods
           emptyDir:
             medium: "Memory"
-        - name: logs
-          hostPath:
-            path: /srv/eldewrito/logs
-            type: Directory
+        - name: dewrito-logs
+          emptyDir:
+            medium: "Memory"
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
