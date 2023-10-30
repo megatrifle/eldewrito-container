@@ -93,7 +93,7 @@ data:
     Server.MapVotingTime "15"
     Server.NumberOfRevotesAllowed "10"
     Server.NumberOfVotingOptions "4"
-    Server.RconPassword ""
+    Server.RconPassword "{{ .Values.config.rconPassword }}"
     Server.ChatCommandKickPlayerEnabled "1"
     Server.ChatCommandShuffleTeamsEnabled "1"
     Server.ChatCommandEndGameEnabled "1"
