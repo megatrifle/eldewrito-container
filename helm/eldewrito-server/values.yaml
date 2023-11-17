@@ -1,8 +1,8 @@
 config:
-  serverName: "[Custom Games Archive] Minigames | Slayer | Infection"
-  serverMessage: "Sorry, some playlist items will be broken. Please send PRs and issues reports to https://github.com/megatrifle/eldewrito-maps until we can get through all the maps and variants. Come help contribute to a community eldewrito map archive!"
+  serverName: "[GNU] Minigames | Slayer | Infection"
+  serverMessage: "Trying something a little different. Please report any issues or requests at https://github.com/megatrifle/eldewrito-maps"
   serverPassword: ""
-  serverPlayerName: "Custom Games Archive"
+  serverPlayerName: "GNUDorito"
   rconPassword: ""
 
 replicaCount: 1
