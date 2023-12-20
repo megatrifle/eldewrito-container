@@ -96,7 +96,7 @@ spec:
         - name: log-reader
           image: busybox
           command: ["/bin/sh"]
-          args: ["-c", "tail -f /var/log/eldewrito/chat.log /var/log/eldewrito/dorito.log"] # Run a shell script that tails the log file
+          args: ["-c", "touch /var/log/eldewrito/chat.log /var/log/eldewrito/dorito.log && tail -f /var/log/eldewrito/chat.log /var/log/eldewrito/dorito.log"] # Run a shell script that tails the log file
           volumeMounts:
             - name: dewrito-logs
               mountPath: /var/log/eldewrito
