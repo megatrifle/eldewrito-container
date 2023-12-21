@@ -41,13 +41,11 @@ spec:
             {{ .Values.gitSync.extraVolumeMounts | toYaml | nindent 12 }}
             {{- end }}
           env:
-            - name: GIT_SYNC_REPO
+            - name: GITSYNC_REPO
               value: {{ .Values.gitSync.repo }}
-            - name: GIT_SYNC_BRANCH
+            - name: GITSYNC_REF
               value: {{ .Values.gitSync.branch }}
-            - name: GIT_SYNC_DEST
-              value: current
-            - name: GIT_SYNC_ROOT
+            - name: GITSYNC_ROOT
               value: /opt/eldewrito/mods
             {{- with .Values.gitSync.env }}
             {{- toYaml . | nindent 12 }}
