@@ -1,5 +1,5 @@
 config:
-  serverName: "[GNU] Minigames | Slayer | Infection"
+  serverName: "[GNU] Minigames | Infection | Slayer"
   serverMessage: "Trying something a little different. Please report any issues or requests at https://github.com/megatrifle/eldewrito-maps"
   serverPassword: ""
   serverPlayerName: "GNUDorito"
